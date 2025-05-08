@@ -2,20 +2,6 @@
 
 This project performs various text mining analyses on the dialogue scripts from the three books of "The Lord of the Rings" trilogy: "The Fellowship of the Ring," "The Two Towers," and "The Return of the King."
 
-## Project Structure
-
-
-TEXT_MINING_PROJECT/
-├── text_mining/
-│ ├── data/
-│ │ ├── 01 Fellowship.txt # Dialogue script for Book 1
-│ │ ├── 02 Two Towers.txt # Dialogue script for Book 2
-│ │ ├── 03 Return of the King.txt # Dialogue script for Book 3
-│ │ └── races.csv # Character race information (currently not fully utilized)
-│ ├── main.py # Main script to run the analysis
-│ ├── utils.py # Utility functions (loading, preprocessing)
-│ └── analysis.py # Functions for specific analyses
-└── requirements.txt # Python package dependencies
 
 ## Technical Setup
 
