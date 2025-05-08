@@ -6,7 +6,6 @@ This project performs various text mining analyses on the dialogue scripts from 
 
 
 TEXT_MINING_PROJECT/
-├──results/
 ├── text_mining/
 │ ├── data/
 │ │ ├── 01 Fellowship.txt # Dialogue script for Book 1
