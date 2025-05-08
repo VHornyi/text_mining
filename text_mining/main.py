@@ -13,13 +13,6 @@ from analysis import (
 def main():
     print("Starting Text Mining Project for Lord of the Rings...")
 
-    # 1. Загрузка данных
-    # df_races = load_races()
-    # if not df_races.empty:
-    #     print("\nFirst 5 rows of races data:")
-    #     print(df_races.head())
-    #     # TODO: Позже можно будет использовать эту информацию, если удастся
-    #     # сопоставить текст с персонажами и их расами.
 
     lotr_texts_dict, combined_lotr_text = load_lotr_texts()
 
@@ -27,37 +20,31 @@ def main():
         print("No text data loaded. Exiting.")
         return
 
-    # 2. Czyszczenie danych tekstowych (Предобработка)
+    # 2. Czyszczenie danych tekstowych 
     print("\n--- Preprocessing Text ---")
-    # Предобработка всего корпуса для общего анализа
     all_processed_tokens = preprocess_text(combined_lotr_text)
     print(f"Total tokens after preprocessing: {len(all_processed_tokens)}")
     if all_processed_tokens:
         print(f"Sample processed tokens: {all_processed_tokens[:10]}")
 
-    # Предобработка текстов каждой книги отдельно для последующего анализа Word Embeddings
-    # и для создания списка "документов" для DTM/TF-IDF
+    
     processed_texts_by_book_tokens = {}
-    raw_texts_by_book_list = [] # Список сырых текстов книг для DTM/TF-IDF
+    raw_texts_by_book_list = [] 
     doc_names = list(lotr_texts_dict.keys())
 
     for book_name, text_content in lotr_texts_dict.items():
         processed_texts_by_book_tokens[book_name] = preprocess_text(text_content)
-        raw_texts_by_book_list.append(text_content if text_content else "") # Добавляем пустую строку, если текста нет
-    
+        raw_texts_by_book_list.append(text_content if text_content else "") 
     list_of_token_lists_for_word2vec = [tokens for tokens in processed_texts_by_book_tokens.values() if tokens]
 
 
     # 3. Podstawowe metody analizy danych tekstowych
-    # Анализ частоты слов (на всем объединенном корпусе)
     analyze_word_frequencies(all_processed_tokens)
 
-    # Анализ N-грамм (например, биграмм и триграмм на всем корпусе)
     analyze_ngrams(all_processed_tokens, n=2, top_n=15)
     analyze_ngrams(all_processed_tokens, n=3, top_n=10)
 
-    # Построение DTM и TF-IDF (на отдельных книгах как документах)
-    # Передаем список сырых текстов (каждая книга - документ)
+
     dtm, tfidf_matrix, feature_names_tuple = build_dtm_tfidf(raw_texts_by_book_list)
     dtm_feature_names, tfidf_feature_names = (None, None)
     if feature_names_tuple:
@@ -65,10 +52,9 @@ def main():
 
 
     # 4. Nienadzorowane uczenie maszynowe
-    # Анализ тональности (для каждой книги)
-    sentiment_analysis_vader(lotr_texts_dict) # Используем исходные тексты для VADER
+   
+    sentiment_analysis_vader(lotr_texts_dict)
 
-    # Тематическое моделирование (LDA на DTM, LSA на TF-IDF)
     if dtm is not None and dtm_feature_names is not None:
         topic_modeling_lda(dtm, dtm_feature_names, n_topics=3, n_top_words=7)
     else:
@@ -80,16 +66,14 @@ def main():
         print("Skipping LSA due to issues with TF-IDF matrix.")
 
 
-    # Кластеризация документов (книг)
-    # n_clusters можно выбрать равным количеству книг или меньше
+    # n_clusters 
     if tfidf_matrix is not None:
         document_clustering_kmeans(tfidf_matrix, doc_names, n_clusters=min(3, len(doc_names))) # Кластеризуем книги
     else:
         print("Skipping K-Means clustering due to issues with TF-IDF matrix.")
 
 
-    # Word Embeddings (на токенах, сгруппированных по книгам)
-    # Используем список списков токенов, где каждый внутренний список - токены одной книги
+    # Word Embeddings 
     if list_of_token_lists_for_word2vec:
          word_embeddings_example(list_of_token_lists_for_word2vec, target_word='frodo')
     else:

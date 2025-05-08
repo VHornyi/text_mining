@@ -3,16 +3,15 @@ import re
 import nltk
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer # или PorterStemmer для стемминга
+from nltk.stem import WordNetLemmatizer 
 from pathlib import Path
 
-# Загрузка необходимых ресурсов NLTK (выполнить один раз)
-# Исправленная логика загрузки ресурсов
+
 resources_to_download = {
     'wordnet': 'corpora/wordnet',
     'punkt': 'tokenizers/punkt',
     'stopwords': 'corpora/stopwords',
-    'omw-1.4': 'corpora/omw-1.4' # Open Multilingual Wordnet, зависимость для WordNet в некоторых языках
+    'omw-1.4': 'corpora/omw-1.4' 
 }
 
 for resource_name, resource_path in resources_to_download.items():
@@ -28,7 +27,7 @@ for resource_name, resource_path in resources_to_download.items():
 DATA_DIR = Path(__file__).resolve().parent / "data"
 
 def load_races():
-    """Загружает данные о расах персонажей."""
+    
     try:
         df_races = pd.read_csv(DATA_DIR / "races.csv", sep=';')
         print("Races data loaded successfully.")
@@ -38,7 +37,7 @@ def load_races():
         return pd.DataFrame()
 
 def load_lotr_texts():
-    """Загружает тексты книг Властелина Колец."""
+    
     books = {
         "Fellowship": "01 Fellowship.txt",
         "Two Towers": "02 Two Towers.txt",
@@ -63,23 +62,18 @@ def load_lotr_texts():
     return texts, " ".join(all_text_corpus)
 
 def preprocess_text(text, language='english'):
-    """
-    Стандартизация текста: токенизация, удаление стоп-слов, лемматизация.
-    """
+   
     if not text:
         return []
     text = text.lower()
     text = re.sub(r'[^a-z\s]', '', text)
     tokens = word_tokenize(text)
     
-    # Убедимся, что stopwords для нужного языка загружены
     try:
         stop_words_set = set(stopwords.words(language))
     except LookupError:
         print(f"Stopwords for '{language}' not found. Please ensure it's downloaded or NLTK has access.")
-        # Можно либо прервать, либо продолжить без удаления стоп-слов
-        stop_words_set = set() # Продолжить без стоп-слов
-        # raise # Или прервать выполнение, если стоп-слова критичны
+        stop_words_set = set() 
 
     filtered_tokens = [word for word in tokens if word not in stop_words_set and len(word) > 2]
     
@@ -88,7 +82,7 @@ def preprocess_text(text, language='english'):
     return lemmatized_tokens
 
 def create_ngrams(tokens, n=2):
-    """Создает n-граммы из списка токенов."""
+    
     if not tokens or len(tokens) < n:
         return []
     return list(nltk.ngrams(tokens, n))

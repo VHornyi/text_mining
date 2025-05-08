@@ -4,10 +4,9 @@ from wordcloud import WordCloud
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.decomposition import LatentDirichletAllocation, TruncatedSVD
 from sklearn.cluster import KMeans
-import nltk # Добавим импорт nltk для nltk.data.find
+import nltk 
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
-# Загрузка VADER лексикона (если еще не загружен) - ИСПРАВЛЕНО
 try:
     nltk.data.find('sentiment/vader_lexicon.zip')
     print("NLTK resource 'vader_lexicon' found.")
@@ -18,7 +17,7 @@ except LookupError:
 
 
 def plot_top_words(tokens, top_n=20, title="Top Words"):
-    """Визуализация наиболее частых слов."""
+
     if not tokens:
         print("No tokens to plot.")
         return
@@ -36,7 +35,7 @@ def plot_top_words(tokens, top_n=20, title="Top Words"):
     plt.show()
 
 def generate_wordcloud(tokens_list, title="Word Cloud"):
-    """Генерация облака слов."""
+    
     if not tokens_list:
         print("No tokens to generate word cloud.")
         return
@@ -53,7 +52,7 @@ def generate_wordcloud(tokens_list, title="Word Cloud"):
     plt.show()
 
 def analyze_word_frequencies(processed_tokens):
-    """Анализ частоты слов."""
+    
     print("\n--- Word Frequency Analysis ---")
     if not processed_tokens:
         print("No processed tokens for frequency analysis.")
@@ -62,48 +61,16 @@ def analyze_word_frequencies(processed_tokens):
     generate_wordcloud(processed_tokens, title="Overall Word Cloud (Lemmatized)")
 
 def analyze_ngrams(processed_tokens, n=2, top_n=15):
-    """Анализ N-грамм."""
+    
     print(f"\n--- {n}-gram Analysis ---")
-    if not processed_tokens or len(processed_tokens) < n: # Импортируем create_ngrams из utils в main.py
+    if not processed_tokens or len(processed_tokens) < n: 
         print(f"Not enough tokens for {n}-gram analysis.")
         return
     
-    # create_ngrams будет импортирован и вызван из main.py, здесь мы ожидаем список n-грамм
-    # Для этого анализа, если он вызывается из analysis.py, ему нужно передать токены, а не n-граммы
-    # Либо вызывать utils.create_ngrams здесь. Предположим, что n-граммы уже созданы и переданы,
-    # или, что более вероятно, эта функция должна принимать токены и вызывать create_ngrams.
-    # Исходя из вашего плана, create_ngrams вызывается в utils, а analyze_ngrams в analysis.
-    # Тогда analyze_ngrams должен получать уже готовые n-граммы или создавать их сам.
-    # В предыдущей версии `main.py` `create_ngrams` не вызывался явно перед `analyze_ngrams`
-    # Лучше, если `analyze_ngrams` принимает токены и вызывает `create_ngrams` из `utils`
-    # Но для этого ему нужен доступ к `create_ngrams`.
-    # Я оставлю как в предыдущем варианте, где `analyze_ngrams` ожидает токены
-    # и использует `create_ngrams` из `nltk.util` (который был импортирован в utils)
-    # Перенесем импорт `create_ngrams` в `analysis.py` или передадим его из `main.py`
-    # Проще всего, если `analyze_ngrams` использует `nltk.ngrams` напрямую или
-    # импортирует `create_ngrams` из `utils`.
+    
+    from utils import create_ngrams 
 
-    # Чтобы избежать путаницы, давайте `analyze_ngrams` будет использовать `nltk.util.ngrams` напрямую.
-    # или лучше импортировать `create_ngrams` из `utils`
-    # Для простоты я изменю `analyze_ngrams`, чтобы он принимал `processed_tokens`.
-    # `create_ngrams` должен быть доступен (импортирован из `utils` в `main` и затем, если нужно, передан,
-    # или `analysis` импортирует `create_ngrams` из `utils`).
-    # В текущей структуре main.py:
-    # from utils import ... create_ngrams ...
-    # from analysis import ... analyze_ngrams ...
-    # То есть `analyze_ngrams` не видит `create_ngrams` из `utils` напрямую.
-    # Проще всего сделать так, чтобы `analyze_ngrams` сам вызывал `nltk.ngrams`.
-
-    # Вернемся к версии, где analyze_ngrams вызывает nltk.util.ngrams, если он был импортирован
-    # `from nltk.util import ngrams` (или `import nltk` и `nltk.ngrams`)
-    # Я добавлю `from utils import create_ngrams` в начало `analysis.py`
-
-    # Для чистоты кода, лучше если `main.py` передаст `create_ngrams` или `analyze_ngrams`
-    # будет импортировать из `utils`.
-    # Я добавлю импорт в `analysis.py`
-    from utils import create_ngrams # Добавим импорт
-
-    ngrams_list = create_ngrams(processed_tokens, n) # Используем импортированную функцию
+    ngrams_list = create_ngrams(processed_tokens, n) 
     if not ngrams_list:
         print(f"No {n}-grams generated.")
         return
@@ -117,7 +84,7 @@ def analyze_ngrams(processed_tokens, n=2, top_n=15):
 
 
 def build_dtm_tfidf(raw_corpus_list):
-    """Построение DTM и TF-IDF матриц."""
+    
     print("\n--- DTM and TF-IDF ---")
     if not raw_corpus_list or not any(raw_corpus_list):
         print("Raw corpus list is empty or contains only empty documents. Cannot build DTM/TF-IDF.")
@@ -147,7 +114,7 @@ def build_dtm_tfidf(raw_corpus_list):
 
 
 def sentiment_analysis_vader(corpus_dict):
-    """Анализ тональности текста с помощью VADER."""
+    
     print("\n--- Sentiment Analysis (VADER) ---")
     analyzer = SentimentIntensityAnalyzer()
     sentiments = {}
@@ -183,7 +150,7 @@ def sentiment_analysis_vader(corpus_dict):
 
 
 def topic_modeling_lda(dtm, feature_names, n_topics=3, n_top_words=10):
-    """Тематическое моделирование с помощью LDA."""
+    
     print("\n--- Topic Modeling (LDA) ---")
     if dtm is None or feature_names is None or dtm.shape[0] < n_topics :
         print(f"Not enough documents ({dtm.shape[0] if dtm is not None else 0}) for {n_topics} topics, or DTM/features are None. Skipping LDA.")
@@ -199,15 +166,13 @@ def topic_modeling_lda(dtm, feature_names, n_topics=3, n_top_words=10):
         print(f"Topic #{topic_idx + 1}: {', '.join(top_words)}")
 
 def topic_modeling_lsa(tfidf_matrix, feature_names, n_topics=3, n_top_words=10):
-    """Тематическое моделирование с помощью LSA (SVD)."""
+    
     print("\n--- Topic Modeling (LSA/SVD) ---")
     if tfidf_matrix is None or feature_names is None or tfidf_matrix.shape[0] < 1: # Проверка на существование матрицы и признаков
         print(f"TF-IDF matrix or features are None, or no documents. Skipping LSA.")
         return
     
-    # n_components должен быть < min(n_samples, n_features)
-    # n_samples = tfidf_matrix.shape[0], n_features = tfidf_matrix.shape[1]
-    max_possible_topics = min(tfidf_matrix.shape) -1 # TruncatedSVD n_components must be < min(n_samples, n_features)
+    max_possible_topics = min(tfidf_matrix.shape) -1 
     if max_possible_topics < 1:
         print(f"Cannot perform LSA: not enough samples or features. Max possible topics: {max_possible_topics}")
         return
@@ -215,7 +180,7 @@ def topic_modeling_lsa(tfidf_matrix, feature_names, n_topics=3, n_top_words=10):
     actual_n_topics = min(n_topics, max_possible_topics)
     if actual_n_topics < n_topics:
         print(f"Warning: Reducing number of LSA topics from {n_topics} to {actual_n_topics} due to data dimensions.")
-    if actual_n_topics < 1: # Еще одна проверка после корректировки
+    if actual_n_topics < 1: 
         print(f"Cannot perform LSA with {actual_n_topics} topics. Skipping.")
         return
 
@@ -231,17 +196,17 @@ def topic_modeling_lsa(tfidf_matrix, feature_names, n_topics=3, n_top_words=10):
 
 
 def document_clustering_kmeans(tfidf_matrix, doc_names, n_clusters=2):
-    """Кластеризация документов с помощью K-Means."""
+
     print("\n--- Document Clustering (K-Means) ---")
     if tfidf_matrix is None or tfidf_matrix.shape[0] < n_clusters:
         print(f"Not enough documents ({tfidf_matrix.shape[0] if tfidf_matrix is not None else 0}) for {n_clusters} clusters, or TF-IDF matrix is None. Skipping K-Means.")
         return
 
-    # K-Means может выбросить ошибку, если n_clusters > n_samples
+    
     actual_n_clusters = min(n_clusters, tfidf_matrix.shape[0])
     if actual_n_clusters < n_clusters:
         print(f"Warning: Reducing number of K-Means clusters from {n_clusters} to {actual_n_clusters} (number of documents).")
-    if actual_n_clusters < 1: # Если после корректировки кластеров 0 (например, 0 документов)
+    if actual_n_clusters < 1: 
         print("Cannot perform K-Means with 0 clusters. Skipping.")
         return
 
@@ -256,26 +221,25 @@ def document_clustering_kmeans(tfidf_matrix, doc_names, n_clusters=2):
 
     if tfidf_matrix.shape[0] > 2 and tfidf_matrix.shape[1] > 1:
         from sklearn.decomposition import PCA
-        # PCA n_components must be < min(n_samples, n_features)
+        
         pca_n_components = min(2, tfidf_matrix.shape[0], tfidf_matrix.shape[1])
-        if pca_n_components < 2 and tfidf_matrix.shape[1] == 1: # Если только 1 признак, PCA до 2 невозможен
+        if pca_n_components < 2 and tfidf_matrix.shape[1] == 1: 
             print("PCA to 2 components not possible with current data dimensions for visualization.")
         elif pca_n_components < 1:
             print("PCA not possible for visualization.")
         else:
-            # Если pca_n_components стал 1, то график будет одномерным, что не очень информативно
-            # Для 2D графика нужно pca_n_components=2
-            if pca_n_components == 1 and tfidf_matrix.shape[0] > 1: # если можем уменьшить до 1 компонента
+            
+            if pca_n_components == 1 and tfidf_matrix.shape[0] > 1: 
                 print("PCA will reduce to 1 component. Visualization might not be 2D.")
                 pca = PCA(n_components=1, random_state=42)
                 reduced_features = pca.fit_transform(tfidf_matrix.toarray())
                 plt.figure(figsize=(8,6))
-                # Одномерный scatter plot
+                
                 plt.scatter(reduced_features[:,0], [0] * len(reduced_features), c=clusters)
                 for i, txt in enumerate(doc_names):
                     plt.annotate(txt, (reduced_features[i,0], 0))
 
-            elif pca_n_components >= 2: # Стандартный случай для 2D
+            elif pca_n_components >= 2:
                 pca = PCA(n_components=2, random_state=42)
                 reduced_features = pca.fit_transform(tfidf_matrix.toarray())
                 plt.figure(figsize=(8,6))
@@ -289,7 +253,7 @@ def document_clustering_kmeans(tfidf_matrix, doc_names, n_clusters=2):
             plt.show()
 
 def word_embeddings_example(processed_tokens_list_of_lists, target_word='frodo'):
-    """Пример использования Word Embeddings (Word2Vec)."""
+
     print("\n--- Word Embeddings (Word2Vec Example) ---")
     if not any(processed_tokens_list_of_lists):
         print("No processed tokens for Word2Vec.")
@@ -298,14 +262,13 @@ def word_embeddings_example(processed_tokens_list_of_lists, target_word='frodo')
     from gensim.models import Word2Vec
 
     try:
-        # Убедимся, что каждый элемент processed_tokens_list_of_lists не пустой
+
         valid_sentences_for_w2v = [s for s in processed_tokens_list_of_lists if s]
         if not valid_sentences_for_w2v:
             print("All token lists are empty. Cannot train Word2Vec model.")
             return
 
         model = Word2Vec(sentences=valid_sentences_for_w2v, vector_size=100, window=5, min_count=1, workers=4)
-        # model.train(valid_sentences_for_w2v, total_examples=model.corpus_count, epochs=10) # train уже вызывается в конструкторе Word2Vec если есть sentences
         print("Word2Vec model trained.")
 
         if target_word in model.wv:
