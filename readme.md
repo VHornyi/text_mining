@@ -1,34 +1,38 @@
+Rozumiem, chcesz inną, być może bardziej czytelną reprezentację struktury projektu w pliku README.md. Spróbujmy przedstawić to za pomocą bardziej standardowego listowania, które jest często używane do reprezentacji drzew katalogów.
+
+Oto poprawiona sekcja Project Structure:
+
 # Lord of the Rings - Text Mining Project
 
 This project performs various text mining analyses on the dialogue scripts from the three books of "The Lord of the Rings" trilogy: "The Fellowship of the Ring," "The Two Towers," and "The Return of the King." The primary goal is to demonstrate various text processing and analysis techniques.
 
 ## Project Structure
 
-The project is organized as follows:
+The project directory (`TEXT_MINING/`) is organized as follows:
 
+*   `requirements.txt`        - Python package dependencies.
+*   `readme.md`               - This documentation file.
+*   `text_mining/`            - Main package containing the source code and data.
+    *   `__init__.py`         - (Optional, makes `text_mining` a package)
+    *   `main.py`             - The main executable script to run the entire analysis pipeline.
+    *   `utils.py`            - Contains utility functions for data loading and text preprocessing.
+    *   `analysis.py`         - Contains functions for performing various text analyses (frequency, sentiment, topics, etc.).
+    *   `data/`               - Directory for input data files.
+        *   `01 Fellowship.txt`
+        *   `02 Two Towers.txt`
+        *   `03 Return of the King.txt`
+        *   `races.csv`         - (Character race information, currently not fully utilized).
+    *   `__pycache__/`        - (Auto-generated Python cache directory).
+*   `results/`                - (Suggested directory to store generated plots if saving is implemented. Plots are currently shown interactively).
+    *   `document_clusters.png` 
+    *   `dtm.png`               
+    *   `Overall_top_25.png`    
+    *   `sentiment.png`         
+    *   `tf-idf.png`            
+    *   `word_cloud.png`        
+*   `__pycache__/`           
 
-TEXT_MINING/
-├── results/ # Directory to store generated plots (if saving is implemented)
-│ ├── document_clusters.png # Example: Plot of document clusters
-│ ├── dtm.png # Example: Heatmap of DTM
-│ ├── Overall_top_25.png # Example: Bar chart of top 25 words
-│ ├── sentiment.png # Example: Bar chart of sentiment scores
-│ ├── tf-idf.png # Example: Heatmap of TF-IDF matrix
-│ └── word_cloud.png # Example: Generated word cloud
-├── text_mining/ # Main package directory
-│ ├── pycache/ # Python cache directory (auto-generated)
-│ ├── data/ # Input data files
-│ │ ├── 01 Fellowship.txt
-│ │ ├── 02 Two Towers.txt
-│ │ ├── 03 Return of the King.txt
-│ │ └── races.csv # (Currently not fully utilized in analysis)
-│ ├── analysis.py # Core analysis functions
-│ ├── main.py # Main script to run the pipeline
-│ └── utils.py # Utility functions (loading, preprocessing)
-├── readme.md # This file
-└── requirements.txt # Python package dependencies
-
-*(Note: The `results/` directory and automatically saving plots to it are not explicitly implemented in the current scripts but are shown as a common organizational practice. Plots are displayed interactively during script execution.)*
+*(Note: The `results/` directory and automatically saving plots to it are not explicitly implemented in the current scripts. Plots are displayed interactively during script execution. The `__init__.py` file in `text_mining/` is optional but good practice for Python packages.)*
 
 ## Technical Setup
 
@@ -66,11 +70,7 @@ cd text_mining
 # Run the main script
 # Replace 'python' with your specific python executable if needed
 python main.py
-IGNORE_WHEN_COPYING_START
-content_copy
-download
-Use code with caution.
-IGNORE_WHEN_COPYING_END
+
 
 Alternatively, from the root TEXT_MINING directory:
 
