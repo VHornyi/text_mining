@@ -28,8 +28,7 @@ The project directory (`TEXT_MINING/`) is organized as follows:
     *   `word_cloud.png`        
 *   `__pycache__/`           
 
-*(Note: The `results/` directory and automatically saving plots to it are not explicitly implemented in the current scripts. Plots are displayed interactively during script execution. The `__init__.py` file in `text_mining/` is optional but good practice for Python packages.)*
-
+*(Note: The `results/` directory and automatically saving plots to it are not explicitly implemented in the current scripts. Plots are displayed interactively during script execution. 
 ## Technical Setup
 
 ### Prerequisites
