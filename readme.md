@@ -16,7 +16,7 @@ TEXT_MINING/
 │ ├── tf-idf.png # Example: Heatmap of TF-IDF matrix
 │ └── word_cloud.png # Example: Generated word cloud
 ├── text_mining/ # Main package directory
-│ ├── pycache/
+│ ├── pycache/ # Python cache directory (auto-generated)
 │ ├── data/ # Input data files
 │ │ ├── 01 Fellowship.txt
 │ │ ├── 02 Two Towers.txt
@@ -28,7 +28,7 @@ TEXT_MINING/
 ├── readme.md # This file
 └── requirements.txt # Python package dependencies
 
-*(Note: The `results/` directory and saving plots to it are not explicitly implemented in the provided scripts but shown as a common practice.)*
+*(Note: The `results/` directory and automatically saving plots to it are not explicitly implemented in the current scripts but are shown as a common organizational practice. Plots are displayed interactively during script execution.)*
 
 ## Technical Setup
 
