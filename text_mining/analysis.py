@@ -6,9 +6,9 @@ from sklearn.decomposition import LatentDirichletAllocation, TruncatedSVD
 from sklearn.cluster import KMeans
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
-import seaborn as sns # Dodano import seaborn
-import pandas as pd # Dodano import pandas
-from utils import create_ngrams # Przeniesiono import create_ngrams tutaj
+import seaborn as sns 
+import pandas as pd 
+from utils import create_ngrams 
 
 try:
     nltk.data.find('sentiment/vader_lexicon.zip')
@@ -66,7 +66,7 @@ def analyze_ngrams(processed_tokens, n=2, top_n=15):
         print(f"Not enough tokens for {n}-gram analysis.")
         return
 
-    ngrams_list = create_ngrams(processed_tokens, n) # Używamy importowanej funkcji
+    ngrams_list = create_ngrams(processed_tokens, n) 
     if not ngrams_list:
         print(f"No {n}-grams generated.")
         return
@@ -117,7 +117,7 @@ def build_dtm_tfidf(raw_corpus_list, doc_names_for_heatmap):
         print("Raw corpus list is empty or contains only empty documents. Cannot build DTM/TF-IDF.")
         return None, None, None
 
-    MAX_FEATURES_FOR_VECTORIZERS = 50 # Możesz dostosować tę wartość
+    MAX_FEATURES_FOR_VECTORIZERS = 50 
 
     dtm = None
     dtm_feature_names = None
@@ -194,7 +194,7 @@ def topic_modeling_lda(dtm, feature_names, n_topics=3, n_top_words=10):
     if dtm.shape[0] < n_topics:
         print(f"Warning: Number of documents ({dtm.shape[0]}) is less than requested n_topics ({n_topics}). Reducing n_topics for LDA to {dtm.shape[0]}.")
         n_topics = dtm.shape[0]
-    if n_topics == 0 : # Jeśli po redukcji n_topics jest 0
+    if n_topics == 0 : 
         print("Cannot perform LDA with 0 topics. Skipping.")
         return
 
@@ -214,9 +214,8 @@ def topic_modeling_lsa(tfidf_matrix, feature_names, n_topics=3, n_top_words=10):
         print(f"TF-IDF matrix or features are None, or matrix has zero dimensions. Skipping LSA.")
         return
 
-    # n_components for TruncatedSVD must be < min(n_samples, n_features)
     max_possible_topics = min(tfidf_matrix.shape)
-    if tfidf_matrix.shape[0] == tfidf_matrix.shape[1]: # SVD requires n_components < n_features if n_features == n_samples
+    if tfidf_matrix.shape[0] == tfidf_matrix.shape[1]:
          max_possible_topics -=1
 
 
@@ -247,15 +246,14 @@ def document_clustering_kmeans(tfidf_matrix, doc_names, n_clusters=2):
         print("TF-IDF matrix is None or has no documents. Skipping K-Means.")
         return
 
-    # n_clusters cannot be greater than n_samples
+    
     actual_n_clusters = min(n_clusters, tfidf_matrix.shape[0])
     if actual_n_clusters < n_clusters:
         print(f"Warning: Reducing number of K-Means clusters from {n_clusters} to {actual_n_clusters} (number of documents).")
-    if actual_n_clusters < 1: # Potrzebny co najmniej 1 klaster
+    if actual_n_clusters < 1: 
         print("Cannot perform K-Means with 0 clusters. Skipping.")
         return
-    # K-Means z 1 klastrem jest trywialny, ale nie powoduje błędu.
-    # Można dodać warunek, by pomijać, jeśli actual_n_clusters == 1 a dokumentów > 1
+    
 
 
     kmeans = KMeans(n_clusters=actual_n_clusters, random_state=42, n_init='auto')
@@ -266,28 +264,27 @@ def document_clustering_kmeans(tfidf_matrix, doc_names, n_clusters=2):
     for doc_name, cluster_id in zip(doc_names, clusters):
         print(f"{doc_name}: Cluster {cluster_id}")
 
-    # Wizualizacja PCA tylko jeśli mamy wystarczająco danych do redukcji
-    if tfidf_matrix.shape[0] > 1 and tfidf_matrix.shape[1] > 1: # Potrzebujemy co najmniej 2 dokumentów i 2 cech
+    
+    if tfidf_matrix.shape[0] > 1 and tfidf_matrix.shape[1] > 1: 
         from sklearn.decomposition import PCA
-        # n_components for PCA must be <= min(n_samples, n_features)
-        # Chcemy 2 komponenty do wizualizacji 2D
+       
         pca_n_components = min(2, tfidf_matrix.shape[0], tfidf_matrix.shape[1])
 
-        if pca_n_components < 1 : # Jeśli nie możemy zredukować nawet do 1 komponentu
+        if pca_n_components < 1 :
              print("PCA not possible for visualization with current data dimensions.")
         else:
             pca = PCA(n_components=pca_n_components, random_state=42)
-            reduced_features = pca.fit_transform(tfidf_matrix.toarray()) # K-Means pracuje na gęstych, PCA też tu
+            reduced_features = pca.fit_transform(tfidf_matrix.toarray()) 
 
             plt.figure(figsize=(8,6))
-            if pca_n_components == 1: # Jeśli zredukowaliśmy do 1 wymiaru
+            if pca_n_components == 1:
                 print("PCA reduced to 1 component. Visualization will be 1D.")
                 plt.scatter(reduced_features[:,0], [0] * len(reduced_features), c=clusters)
                 for i, txt in enumerate(doc_names):
-                    plt.annotate(txt, (reduced_features[i,0], 0.01)) # Mały offset dla etykiet
-                plt.yticks([]) # Usuwamy oś Y
+                    plt.annotate(txt, (reduced_features[i,0], 0.01)) 
+                plt.yticks([]) 
                 plt.ylabel("")
-            else: # Standardowa wizualizacja 2D
+            else: 
                 scatter = plt.scatter(reduced_features[:,0], reduced_features[:,1], c=clusters)
                 for i, txt in enumerate(doc_names):
                     plt.annotate(txt, (reduced_features[i,0], reduced_features[i,1]))
@@ -314,7 +311,7 @@ def word_embeddings_example(processed_tokens_list_of_lists, target_word='frodo')
             print("All token lists are empty. Cannot train Word2Vec model.")
             return
 
-        # min_count=1 jest OK dla małych korpusów
+        
         model = Word2Vec(sentences=valid_sentences_for_w2v, vector_size=100, window=5, min_count=1, workers=4, epochs=10)
         print("Word2Vec model trained.")
 
@@ -334,9 +331,9 @@ def word_embeddings_example(processed_tokens_list_of_lists, target_word='frodo')
                 missing_analogy_words = [w for w in ['king', 'man', 'woman'] if w not in model.wv]
                 if missing_analogy_words:
                     print(f"Cannot perform analogy, words not in vocab: {', '.join(missing_analogy_words)}")
-        except KeyError as e: # Może wystąpić, jeśli słowo jest w vocab, ale nie da się znaleźć podobnych
+        except KeyError as e: 
             print(f"Could not perform analogy, word not in vocab or no similar vectors: {e}")
-        except Exception as e_sim: # Ogólny błąd dla most_similar
+        except Exception as e_sim: 
             print(f"Could not perform analogy due to an error: {e_sim}")
 
 
