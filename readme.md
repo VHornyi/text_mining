@@ -1,7 +1,3 @@
-Rozumiem, chcesz inną, być może bardziej czytelną reprezentację struktury projektu w pliku README.md. Spróbujmy przedstawić to za pomocą bardziej standardowego listowania, które jest często używane do reprezentacji drzew katalogów.
-
-Oto poprawiona sekcja Project Structure:
-
 # Lord of the Rings - Text Mining Project
 
 This project performs various text mining analyses on the dialogue scripts from the three books of "The Lord of the Rings" trilogy: "The Fellowship of the Ring," "The Two Towers," and "The Return of the King." The primary goal is to demonstrate various text processing and analysis techniques.
@@ -217,10 +213,4 @@ Explore other visualization types (e.g., association plots, network graphs).
 
 Use more advanced sentiment analysis models.
 
-This project serves as a practical demonstration of a text mining pipeline applied to a well-known literary work.
 
-IGNORE_WHEN_COPYING_START
-content_copy
-download
-Use code with caution.
-IGNORE_WHEN_COPYING_END
