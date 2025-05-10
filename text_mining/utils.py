@@ -46,7 +46,7 @@ def load_lotr_texts():
     print("Loading LOTR texts...")
     for book_name, filename in books.items():
         try:
-            # Upewnij się, że kodowanie 'cp1252' jest poprawne dla Twoich plików
+            
             with open(DATA_DIR / filename, 'r', encoding='cp1252') as f:
                 content = f.read()
                 texts[book_name] = content
@@ -64,16 +64,16 @@ def preprocess_text(text, language='english'):
     if not text:
         return []
     text = text.lower()
-    text = re.sub(r'[^a-z\s]', '', text) # Pozostawia tylko litery i spacje
+    text = re.sub(r'[^a-z\s]', '', text) 
     tokens = word_tokenize(text)
 
     try:
         stop_words_set = set(stopwords.words(language))
     except LookupError:
         print(f"Stopwords for '{language}' not found. Please ensure it's downloaded or NLTK has access.")
-        stop_words_set = set() # Kontynuuj bez usuwania stop-słów w razie błędu
+        stop_words_set = set() 
 
-    filtered_tokens = [word for word in tokens if word not in stop_words_set and len(word) > 2] # Usuwa też krótkie słowa
+    filtered_tokens = [word for word in tokens if word not in stop_words_set and len(word) > 2] 
 
     lemmatizer = WordNetLemmatizer()
     lemmatized_tokens = [lemmatizer.lemmatize(word) for word in filtered_tokens]
