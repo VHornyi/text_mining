@@ -39,7 +39,7 @@ The project directory (`TEXT_MINING/`) is organized as follows:
 1.  **Clone the repository (or download the files):**
     If you are using Git:
     ```bash
-    git clone <repository_url>
+    git clone "https://github.com/VHornyi/text_mining.git"
     cd TEXT_MINING
     ```
     Otherwise, download and extract the project files into a directory named `TEXT_MINING`.
